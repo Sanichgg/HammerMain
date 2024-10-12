@@ -1,0 +1,48 @@
+
+ui_swipe_v1.png
+size: 1698,411
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+swipe_glow
+  rotate: false
+  xy: 1520, 53
+  size: 94, 94
+  orig: 100, 100
+  offset: 3, 3
+  index: -1
+ui_arm
+  rotate: true
+  xy: 972, 149
+  size: 260, 724
+  orig: 260, 760
+  offset: 0, 36
+  index: -1
+ui_arrow
+  rotate: true
+  xy: 2, 225
+  size: 184, 968
+  orig: 184, 969
+  offset: 0, 0
+  index: -1
+ui_arrow_swiped
+  rotate: true
+  xy: 2, 40
+  size: 183, 967
+  orig: 183, 968
+  offset: 0, 0
+  index: -1
+ui_arrow_swiped_text
+  rotate: true
+  xy: 971, 75
+  size: 72, 547
+  orig: 72, 547
+  offset: 0, 0
+  index: -1
+ui_arrow_text
+  rotate: true
+  xy: 971, 2
+  size: 71, 545
+  orig: 71, 545
+  offset: 0, 0
+  index: -1

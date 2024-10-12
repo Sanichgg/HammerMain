@@ -1,0 +1,146 @@
+
+chararcter_omon1.png
+size: 2048,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+police_arm_l
+  rotate: false
+  xy: 808, 129
+  size: 135, 392
+  orig: 135, 392
+  offset: 0, 0
+  index: -1
+police_arm_r
+  rotate: false
+  xy: 935, 704
+  size: 179, 314
+  orig: 179, 314
+  offset: 0, 0
+  index: -1
+police_belt
+  rotate: false
+  xy: 667, 521
+  size: 256, 101
+  orig: 256, 101
+  offset: 0, 0
+  index: -1
+police_body
+  rotate: false
+  xy: 452, 27
+  size: 356, 484
+  orig: 356, 484
+  offset: 0, 0
+  index: -1
+police_elbow_l
+  rotate: false
+  xy: 923, 521
+  size: 131, 101
+  orig: 131, 101
+  offset: 0, 0
+  index: -1
+police_eye_l
+  rotate: true
+  xy: 0, 32
+  size: 45, 33
+  orig: 45, 33
+  offset: 0, 0
+  index: -1
+police_eye_r
+  rotate: false
+  xy: 0, 7
+  size: 23, 25
+  orig: 23, 25
+  offset: 0, 0
+  index: -1
+police_foot_l
+  rotate: false
+  xy: 1114, 286
+  size: 207, 236
+  orig: 207, 236
+  offset: 0, 0
+  index: -1
+police_foot_r
+  rotate: false
+  xy: 1321, 302
+  size: 212, 220
+  orig: 212, 220
+  offset: 0, 0
+  index: -1
+police_head
+  rotate: false
+  xy: 1114, 769
+  size: 147, 249
+  orig: 147, 249
+  offset: 0, 0
+  index: -1
+police_helmet
+  rotate: true
+  xy: 1261, 782
+  size: 236, 208
+  orig: 236, 208
+  offset: 0, 0
+  index: -1
+police_hip_l
+  rotate: false
+  xy: 667, 622
+  size: 268, 396
+  orig: 268, 396
+  offset: 0, 0
+  index: -1
+police_hip_r
+  rotate: false
+  xy: 943, 149
+  size: 171, 372
+  orig: 171, 372
+  offset: 0, 0
+  index: -1
+police_pelvis
+  rotate: false
+  xy: 1054, 522
+  size: 287, 182
+  orig: 287, 182
+  offset: 0, 0
+  index: -1
+police_shield
+  rotate: false
+  xy: 0, 77
+  size: 452, 941
+  orig: 452, 941
+  offset: 0, 0
+  index: -1
+police_shin_l
+  rotate: false
+  xy: 1341, 574
+  size: 140, 208
+  orig: 140, 208
+  offset: 0, 0
+  index: -1
+police_shin_r
+  rotate: true
+  xy: 808, 3
+  size: 126, 165
+  orig: 126, 165
+  offset: 0, 0
+  index: -1
+police_shoulder_l
+  rotate: false
+  xy: 1230, 55
+  size: 178, 231
+  orig: 178, 231
+  offset: 0, 0
+  index: -1
+police_shoulder_r
+  rotate: true
+  xy: 973, 0
+  size: 149, 257
+  orig: 149, 257
+  offset: 0, 0
+  index: -1
+police_stick
+  rotate: true
+  xy: 452, 511
+  size: 507, 215
+  orig: 507, 215
+  offset: 0, 0
+  index: -1

@@ -13,6 +13,13 @@ public class HammerUse : MonoBehaviour
     private bool isDragging = false;
     public float dropForce;
 
+    public GameObject reloadHammer;//отдельный ГО на молоток-перезарядку
+    private GameObject reloadHammerInstance;
+    private bool isReloading = false;
+    //public Color startColor = Color.blue;
+    //public Color endColor = Color.green;
+    //private SpriteRenderer circleSpriteRenderer;
+
     Vector3 throwVector;
 
     //For Roation When Throwing
@@ -54,7 +61,7 @@ public class HammerUse : MonoBehaviour
     void Start()
     {
         //StartCoroutine(GetPrev());
-       
+
     }
 
     void Update()
@@ -81,13 +88,38 @@ public class HammerUse : MonoBehaviour
         if (reloadTimer > 0)
         {
             reloadTimer -= Time.deltaTime;
+            if (reloadHammerInstance != null)
+            {
+                Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                mousePosition.z = 0f;  
+                reloadHammerInstance.transform.position = mousePosition;
+                float reloadProgress = (reloadTime - reloadTimer) / reloadTime;
+                //circleSpriteRenderer.color = Color.Lerp(startColor, endColor, reloadProgress);
+            }
         }
 
         if (hammerCount <= 0 && reloadTimer <= 0)
         {
             reloadTimer = reloadTime;
             hammerCount = 20;
+
+            Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            mousePosition.z = 0f;  
+            reloadHammerInstance = Instantiate(reloadHammer, mousePosition, Quaternion.identity);
+            //circleSpriteRenderer = reloadHammerInstance.GetComponentInChildren<SpriteRenderer>();
+            isReloading = true;
         }
+
+        if (reloadTimer <= 0 && isReloading)
+        {
+            if (reloadHammerInstance != null)
+            {
+                Destroy(reloadHammerInstance);
+            }
+
+            isReloading = false;
+        }
+
 
         if (isDragging && currentObject != null)
         {

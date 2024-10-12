@@ -11,6 +11,7 @@ using Spine.Unity;
 [RequireComponent(typeof(WaypontsSystem))]
 public class TheaterSystem : MonoBehaviour
 {
+    
     [SerializeField] bool facingRight;
     [SerializeField] float scaleX;
     SkeletonAnimation skeleton;
@@ -20,6 +21,8 @@ public class TheaterSystem : MonoBehaviour
     [SerializeField] bool moving = true;
     public GameObject currentTextBox;
     public TMP_Text text;
+    [Header("Audio")]
+    [SerializeField] AudioSource audiToPlay;
     [Space]
     public string walkAnimationName;
     public bool walkAnimationLoopSetting;
@@ -52,7 +55,7 @@ public class TheaterSystem : MonoBehaviour
     private void Start()
     {
         scaleX = transform.localScale.x;
-
+        audiToPlay = GetComponent<AudioSource>();
     }
     public void Update()
     {
@@ -110,6 +113,7 @@ public class TheaterSystem : MonoBehaviour
         moving = false;
         yield return new WaitForSeconds(wait ? mainIndividaulParameters[waypointindex].stopTimer : 0);
         if (waypointindex < waypontsSystem.waypoints.Length - 1) { waypointindex++; }
+
         Flip();
         moving = true;
     }
@@ -124,14 +128,20 @@ public class TheaterSystem : MonoBehaviour
             Vector3 localScale = transform.localScale;
             localScale.x = scaleX * Mathf.Sign(mainIndividaulParameters[waypointindex].waypoint.transform.position.x - transform.position.x);
             transform.localScale = localScale;
-        /*
+
+            
+            Vector3 localScaleText = currentTextBox.transform.localScale;
+            localScaleText.x = localScaleText.x * Mathf.Sign(mainIndividaulParameters[waypointindex].waypoint.transform.position.x - transform.position.x);
+            currentTextBox.transform.localScale = localScaleText;
+            Debug.LogWarning("Flip"); 
+            /*
             Vector3 localScaleText = currentTextBox.transform.localScale;
             localScaleText.x *= -1f;
             currentTextBox.transform.localScale = localScaleText;
             Debug.LogWarning("Flip");*/
 
-       // } else return;
-        
+        // } else return;
+
 
     }
 
@@ -144,6 +154,9 @@ public class TheaterSystem : MonoBehaviour
         {
             mainIndividaulParameters[waypointindex].textBox.SetActive(true);
             text.text = textLocal;
+            AudioClip audio = mainIndividaulParameters[waypointindex].audioClip;
+            audiToPlay.clip = audio;
+            audiToPlay.Play();
         }
         else mainIndividaulParameters[waypointindex].textBox.SetActive(false);
     }
@@ -168,13 +181,15 @@ public class TheaterSystem : MonoBehaviour
 [System.Serializable]
 public class PointsSettings
 {
-
     public string namePoint;
     [Tooltip("Название точки")]
     [Header("TextBubble")]
     public bool showTextWhileWalking;
     public GameObject textBox;
     public string text;
+    [Header("Audio To play")]
+    
+    public AudioClip audioClip;
     [Header("Path")]
     public Transform waypoint;
     [Header("Speed Settings")]

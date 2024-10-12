@@ -1,20 +1,22 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public float marshrutkaCardsPoint; // маршрутка
+    public float pianoCardPoint;
+    //public List<svyatogorScript> svyatogors = new List<svyatogorScript>(); 
 
-    public float marshrutkaCardsPoint;
-    // Start is called before the first frame update
-    void Start()
+    public bool isSvyatogorCardChosen = false;
+    public bool isPianoCardChosen = false;
+
+    public void OnSvyatogorCardChosen()
     {
-        
+        isSvyatogorCardChosen = true;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void OnPianoCardChosen()
     {
-        
+        isPianoCardChosen = true;
     }
 }

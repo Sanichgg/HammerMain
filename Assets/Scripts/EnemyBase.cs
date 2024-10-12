@@ -14,6 +14,8 @@ public class EnemyBase : MonoBehaviour
     //public float damageEnemy;
     public HammerUse hammerUse;
     public MarshrutkaMove marshrutka;
+    public svyatogorDamage svyatogor;
+    public pianoLogicCard piano;
     public int HP
     {
         get { return hp; }
@@ -94,6 +96,8 @@ public class EnemyBase : MonoBehaviour
         }
 
         marshrutka = FindObjectOfType<MarshrutkaMove>();
+        svyatogor = FindObjectOfType<svyatogorDamage>();
+        piano = FindObjectOfType<pianoLogicCard>();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -110,7 +114,7 @@ public class EnemyBase : MonoBehaviour
         {
             //Destroy(collision.gameObject);
             TakeDamage();
-            Debug.Log(hammerUse.finalDamage);
+            //Debug.Log(hammerUse.finalDamage);
         }
 
         if (collision.gameObject.GetComponent<Brick>() && !carriesABrick)
@@ -124,12 +128,22 @@ public class EnemyBase : MonoBehaviour
         {
             //Destroy(collision.gameObject);
             TakeDamageMarshurtka();
-            Debug.Log(marshrutka.finalMarshrutkaDamage);
+            //Debug.Log(marshrutka.finalMarshrutkaDamage);
         }
         //else if(collision.gameObject.GetComponent<Player>())
         //{
         //    carriesABrick = true;
         //}
+
+        if (collision.gameObject.CompareTag("Svyatogor"))
+        {
+            TakeDamageSvyatogor();
+        }
+
+        if (collision.gameObject.CompareTag("Piano"))
+        {
+            TakeDamagePiano();  
+        }
     }
 
     private void TakeABrick()
@@ -243,6 +257,36 @@ public class EnemyBase : MonoBehaviour
     {
         HP += -marshrutka.finalMarshrutkaDamage;
         if (marshrutka.marshrutkaDamage > bigDamage)
+        {
+            StartCoroutine(Ragdoll());
+        }
+
+        if (HP <= 0)
+        {
+            isDead = true;
+            StartCoroutine(Death());
+        }
+    }
+
+    public void TakeDamageSvyatogor()
+    {
+        HP += -svyatogor.svyatogorDamageFinale;
+        if (svyatogor.svyatogorDamageFinale > bigDamage)
+        {
+            StartCoroutine(Ragdoll());
+        }
+
+        if (HP <= 0)
+        {
+            isDead = true;
+            StartCoroutine(Death());
+        }
+    }
+
+    public void TakeDamagePiano()
+    {
+        HP += -piano.finalPianoDamage;
+        if (piano.finalPianoDamage > bigDamage)
         {
             StartCoroutine(Ragdoll());
         }

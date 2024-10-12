@@ -13,6 +13,7 @@ public class UIHammer : MonoBehaviour
     public TextMeshProUGUI hammerMagazine;
     public TextMeshProUGUI hammerAllDrop;
     public TextMeshProUGUI timerHammer;
+    public TextMeshProUGUI hammerDamage;
 
     [Header("Настройки для молотков")]
     public TextMeshProUGUI trowForce;
@@ -66,6 +67,7 @@ public class UIHammer : MonoBehaviour
         bounceForceSlider.value = bounceForceInstrument;
         spinSlider.value = angularSpin;
         reloadSlider.value = reloadTime;
+       
     }
 
     // Update is called once per frame
@@ -88,8 +90,10 @@ public class UIHammer : MonoBehaviour
         hammerMagazine.text = hammerUse.hammerCount.ToString();
         hammerAllDrop.text = hammerUse.allHammers.ToString();
         timerHammer.text = hammerUse.reloadTimer.ToString();
-        
-       
+        hammerDamage.text = hammerUse.finalDamage.ToString();
+
+
+
 
     }
 }

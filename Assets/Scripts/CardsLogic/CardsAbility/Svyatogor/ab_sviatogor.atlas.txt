@@ -1,0 +1,27 @@
+
+ab_sviatogor.png
+size: 1164,305
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+dust
+  rotate: true
+  xy: 1071, 120
+  size: 183, 91
+  orig: 184, 95
+  offset: 1, 2
+  index: -1
+sviatogor_finger1
+  rotate: false
+  xy: 995, 33
+  size: 74, 270
+  orig: 74, 270
+  offset: 0, 0
+  index: -1
+sviatogor_hand1
+  rotate: true
+  xy: 2, 2
+  size: 301, 991
+  orig: 301, 991
+  offset: 0, 0
+  index: -1
