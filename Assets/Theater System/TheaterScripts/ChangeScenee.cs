@@ -5,19 +5,35 @@ using UnityEngine.SceneManagement;
 
 public class ChangeScenee : MonoBehaviour
 {
-    [SerializeField] Animator anim;
     public int sceneNumber;
-    public float timeToChangeScene;
-    void Start()
-    {
-        anim = GetComponent<Animator>();
-    }
+    public Animator transitionRight;
+    public Animator transitionLeft;
+    public Animator transitionUp;
+    public Animator transitionLeftShtori;
+    public Animator transitionRightShtori;
+    public float transitionTime;
 
-
-    public void TimerChangeSceneMethod()
+    public void ChangeScnene()
     {
-        anim.SetTrigger("Start");
-        Invoke("ChangeSceneewew", timeToChangeScene);
+        StartCoroutine(LoadLevel(sceneNumber));
     }
-    public void ChangeScene() => SceneManager.LoadScene(sceneNumber);
+    IEnumerator LoadLevel(int sceneNUm)
+    {
+        if(transitionLeftShtori == null && transitionRightShtori == null)
+        {
+            transitionRight.SetTrigger("Start");
+            transitionLeft.SetTrigger("Start");
+            transitionUp.SetTrigger("Start");
+        }
+        else
+        {
+            transitionRight.SetTrigger("Start");
+            transitionLeft.SetTrigger("Start");
+            transitionUp.SetTrigger("Start");
+            transitionLeftShtori.SetTrigger("Start");
+            transitionRightShtori.SetTrigger("Start");
+        }
+        yield return new WaitForSeconds(transitionTime);
+        SceneManager.LoadScene(sceneNUm);
+    }
 }

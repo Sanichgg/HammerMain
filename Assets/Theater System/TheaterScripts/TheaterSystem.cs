@@ -2,23 +2,49 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-
 using System;
 using TMPro;
 using Spine.Unity;
 
 
+/// <summary>
+/// Общая инструкция: 
+/// 
+/// !Как работает логика. Есть точки, он их ищет, он идёт к ним. 
+/// 
+/// Есть возможность говорить пока он идёт к цели.
+/// 
+/// * Если вам эта функция не нужна будет, то только добавляйте, в Text Box, диалоговое окно перса.
+/// 
+/// Если в "mainIndividaulParameters" стоит галочка стоп, то он останавливается, на определённое время.
+/// 
+/// Чтобы проигрывать анимацию и говорить что-то, используйте методы написанные в самом низу.
+/// 
+/// Если же нужна пауза(остаться на точке к которой он пришёл) у персонажа(ждать своей очереди),
+/// то ставите галочку в Stop и на сколько времени (Stop Timer)
+/// 
+/// Внизу под методами находится класс "PointsSettings" 
+/// в нём прописаны все нужные переменные.
+/// ** ЕСЛИ вам нужно будет добавить новую переменную то добавляется таким образом
+/// mainIndividaulParameters[waypointindex].название переменной в классе "PointsSettings"
+/// 
+/// Читайте ошибки прописанные в этом скрипте, если они возникнут. Они являются подсказками.
+/// 
+/// Если добавляете анимацию, то анимация должна соответствовать названию
+/// в компоненте SkeletonAnimation => Animation name!
+/// </summary>
+
 [RequireComponent(typeof(WaypontsSystem))]
 public class TheaterSystem : MonoBehaviour
 {
-    
-    [SerializeField] bool facingRight;
+    [SerializeField] bool moving = true;
     [SerializeField] float scaleX;
     SkeletonAnimation skeleton;
     [Header("Waypoints")]
     WaypontsSystem waypontsSystem;
     [SerializeField] int waypointindex;
-    [SerializeField] bool moving = true;
+    
+    [Header("ChatBox")]
     public GameObject currentTextBox;
     public TMP_Text text;
     [Header("Audio")]
@@ -39,7 +65,7 @@ public class TheaterSystem : MonoBehaviour
         Debug.Log(GetComponentInChildren<TMP_Text>().name);
         Debug.Log(mainIndividaulParameters.Count);
 
-
+        //Поиск точек
         if (waypontsSystem.waypoints.Length < mainIndividaulParameters.Count || waypontsSystem.waypoints.Length > mainIndividaulParameters.Count)
         {
             throw new Exception("Ты Дэбил? Где ещё точки?!");
@@ -59,17 +85,7 @@ public class TheaterSystem : MonoBehaviour
     }
     public void Update()
     {
-        /*
-        if (currentTextBox.activeInHierarchy)
-        {
-            Debug.Log("Yes It's Active");
-        }
-        else Debug.Log("Nope");*/
-
         Movement();
-        
-        
-
     }
     protected void Movement()
     {
@@ -93,20 +109,17 @@ public class TheaterSystem : MonoBehaviour
             else mainIndividaulParameters[waypointindex].textBox.SetActive(false);
 
         }
+        //Если достигает цели то останавливается
         if (Vector2.Distance(transform.position, waypontsSystem.waypoints[waypointindex].position) < 0.01f)
         {
-            //Flip(mainIndividaulParameters[waypointindex]);
             if (moving)
             {
-                
-                //DirCheck();
                 StartCoroutine(Waiting(mainIndividaulParameters[waypointindex].stop));
-                
-
             }
 
         }
     }
+    //Что происходит при остановки
     IEnumerator Waiting(bool wait = true)
     {
         mainIndividaulParameters[waypointindex].WhatToDo.Invoke();
@@ -118,14 +131,12 @@ public class TheaterSystem : MonoBehaviour
         moving = true;
     }
     
-    
+    //Поворот персонажа если персонаж изначально смотрит ВПРАВО
+    //*Альтернативный скрипт называется TheaterLeft
     public void Flip()
     {
-        //if (mainIndividaulParameters[waypointindex].lookToTheLeftOnNextPoint == false)
-        //{
-           
-            
             Vector3 localScale = transform.localScale;
+            //Mathf.Sign заставляет персонажа смотреть в ту же сторону, к которой он шёл
             localScale.x = scaleX * Mathf.Sign(mainIndividaulParameters[waypointindex].waypoint.transform.position.x - transform.position.x);
             transform.localScale = localScale;
 
@@ -135,14 +146,14 @@ public class TheaterSystem : MonoBehaviour
             currentTextBox.transform.localScale = localScaleText;
             Debug.LogWarning("Flip"); 
             /*
+            if (mainIndividaulParameters[waypointindex].lookToTheLeftOnNextPoint == false)
+            {
             Vector3 localScaleText = currentTextBox.transform.localScale;
             localScaleText.x *= -1f;
             currentTextBox.transform.localScale = localScaleText;
-            Debug.LogWarning("Flip");*/
-
-        // } else return;
-
-
+            Debug.LogWarning("Flip");
+            } else return;
+            */
     }
 
     ////
@@ -177,6 +188,7 @@ public class TheaterSystem : MonoBehaviour
         Debug.LogWarning(skeleton.AnimationName);*/
     }
 }
+
 //Сам массив данных
 [System.Serializable]
 public class PointsSettings

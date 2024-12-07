@@ -30,11 +30,11 @@ public class PianoController : MonoBehaviour
     public void UpdateTimer()
     {
         if (!playerController.isPianoCardChosen || activePiano != null)
-            return; // Не обновляем таймер, если уже есть активное пиано
+            return; //не обновляю таймер, если уже есть активное пиано
 
         timeSinceLastSecond += Time.deltaTime;
 
-        // Проверяем возможность активации способности
+        //проверяем возможность активации способности
         if (timeSinceLastSecond >= 1f)
         {
             secondsCounter++;
@@ -49,7 +49,7 @@ public class PianoController : MonoBehaviour
 
     public bool ShouldActivate()
     {
-        // Ограничиваем шанс активации
+        //ограничиваем шанс активации
         float activationChance = Mathf.Clamp(baseChance + secondsCounter, 1f, 100f);
         float randomValue = Random.Range(0f, 100f);
 
@@ -80,7 +80,7 @@ public class PianoController : MonoBehaviour
     private void ResetActivationChance()
     {
         secondsCounter = 0;
-        hasActivated = false; // Сброс флага активации
-        baseChance = 1.0f; // Сброс шанса к 1% после спавна пиано
+        hasActivated = false; //сброс флага активации
+        baseChance = 1.0f; //сброс шанса к 1% после спавна пиано
     }
 }

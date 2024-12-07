@@ -23,7 +23,6 @@ public class svyatogorScript : MonoBehaviour
 
     public void UpdateTimer()
     {
-        // Проверяем, выбрана ли карта и не активирован ли Святогор
         if (!playerController.isSvyatogorCardChosen || hasActivated)
             return;
 
@@ -33,8 +32,6 @@ public class svyatogorScript : MonoBehaviour
         {
             secondsCounter++;
             timeSinceLastSecond -= 1f; // уменьшаем на 1 секунду
-
-            // Проверяем возможность активации способности
             if (ShouldActivate())
             {
                 AttackEnemy();
@@ -55,7 +52,7 @@ public class svyatogorScript : MonoBehaviour
 
     public void AttackEnemy()
     {
-        if (hasActivated) return; // Если Святогор уже активирован, не выполнять атаку
+        if (hasActivated) return;
 
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
         List<GameObject> targets = new List<GameObject>();
@@ -72,14 +69,12 @@ public class svyatogorScript : MonoBehaviour
         {
             GameObject randomEnemy = targets[Random.Range(0, targets.Count)];
             Vector3 enemyPosition = randomEnemy.transform.position;
-
-            // Создаем Святогора выше противника
             Vector3 spawnPosition = new Vector3(enemyPosition.x, enemyPosition.y, enemyPosition.z);
 
             GameObject spawnedSprite = Instantiate(svyatogorSprite, spawnPosition, Quaternion.identity);
             Destroy(randomEnemy);
             StartCoroutine(DestroySpriteAfterDelay(spawnedSprite, 2f));
-            hasActivated = true; // устанавливаем флаг активации
+            hasActivated = true; 
         }
     }
 

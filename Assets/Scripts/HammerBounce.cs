@@ -90,8 +90,11 @@ public class HammerBounce : MonoBehaviour
     private void CalculateDamage()
     {
         hammerUse.throwDistance = Vector3.Distance(hammerUse.initialPos, transform.position);
-        hammerUse.addDamage = Mathf.Lerp(0, hammerUse.maxAdditionalDamage, hammerUse.throwDistance / hammerUse.maxDistance);
+        float normalizedDistance = Mathf.Clamp01(hammerUse.throwDistance / hammerUse.maxDistance);
+        hammerUse.addDamage = Mathf.Sqrt(normalizedDistance) * hammerUse.maxAdditionalDamage;
         hammerUse.damage = hammerUse.baseDamage + hammerUse.addDamage;
         hammerUse.finalDamage = Mathf.RoundToInt(hammerUse.damage);
+
+        Debug.Log(hammerUse.finalDamage);
     }
 }

@@ -4,23 +4,23 @@ using UnityEngine;
 
 public class SchetchikMain : MonoBehaviour
 {
-    public GameObject strelka; // Стрелка
-    public SpriteRenderer greenSchethik;// Зеленый спрайт счетчика
-    public SpriteRenderer redSchethik; // Красный спрайт счетчика
-    public SpriteRenderer greenBolt;// Зеленый болт
-    public SpriteRenderer redBolt;// Красный болт
+    public GameObject strelka; //стрелка
+    public SpriteRenderer greenSchethik;//зеленый спрайт счетчика
+    public SpriteRenderer redSchethik; // красный спрайт счетчика
+    public SpriteRenderer greenBolt;// зеленый болт
+    public SpriteRenderer redBolt;//красный болт
 
-    public float rotateSpeed = 50f;// Стандартная скорость вращения стрелки
-    public float slowDownSpeed = 10f;// Скорость вращения при замедлении (когда тип стрелка идет к значению который равен урону)
-    public float recoverySpeed = 20f;// Скорость восстановления скорости
+    public float rotateSpeed = 50f;//стандартная скорость вращения стрелки
+    public float slowDownSpeed = 10f;// скорость вращения при замедлении (когда тип стрелка идет к значению который равен урону)
+    public float recoverySpeed = 20f;//скорость восстановления скорости
     
-    public float requiredDamage = 15f;// Урон для полной фиксации счетчика
-    public float currentDamage = 0f; // Текущий урон
+    public float requiredDamage = 15f;//урон для полной "фиксации" счетчика
+    public float currentDamage = 0f; // текущий урон
 
-    private float currentRotationSpeed;// Текущая скорость вращения
-    private bool isDamaged = false;
+    private float currentRotationSpeed;//текущая скорость вращения
+    public bool isDamaged = false;
     private bool isFixedInPlace = false;
-    private float maxRotation = -360f;// Максимальный угол вращения
+    private float maxRotation = -360f;//максимальный угол вращения
 
     void Start()
     {

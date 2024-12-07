@@ -6,6 +6,36 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/TayaFixFolder/MainMenu.unity
+    guid: e7d190a0ac32068499686e7bce08aa12
+  - enabled: 1
+    path: Assets/Theater System/Theater.unity
+    guid: c44ee2ae0acdea9438610b8068872b4f
+  - enabled: 1
+    path: Assets/Theater System/TutorMiniGames/CountersTutor/Counters.unity
+    guid: e329324b08a464045adc46f242494052
+  - enabled: 1
+    path: Assets/Theater System/Theater 2.unity
+    guid: 8aa915f6fb06d0a499ca5a69561ac8c5
+  - enabled: 1
+    path: Assets/Theater System/Theater 3.unity
+    guid: 91ecfef0ab78cbc409a5e9e4baf9a71d
+  - enabled: 1
+    path: Assets/Theater System/TutorMiniGames/Nasos/Nasos.unity
+    guid: 8c0f253d6497eae40afd91a1d3baa202
+  - enabled: 1
+    path: Assets/Theater System/Theater 4.unity
+    guid: 3a4f625a47e41d5408bf8fef2fa611cb
+  - enabled: 1
+    path: Assets/Theater System/TutorMiniGames/Again/Again.unity
+    guid: f701966f376001249a813c8520d384bd
+  - enabled: 1
+    path: Assets/Theater System/Theater 5.unity
+    guid: c71e504eab312444684b7b4c42a6296f
+  - enabled: 1
+    path: Assets/Theater System/Theater 6.unity
+    guid: fa8a8dbf51aa90f47a1d731762bc817e
+  - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   m_configObjects: {}

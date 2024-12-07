@@ -4,6 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
+using TMPro;
 
 public class EnemyBase : MonoBehaviour
 {
@@ -16,6 +18,10 @@ public class EnemyBase : MonoBehaviour
     public MarshrutkaMove marshrutka;
     public svyatogorDamage svyatogor;
     public pianoLogicCard piano;
+    public MineWork mine;
+
+    public TextMeshPro damageText;
+
     public int HP
     {
         get { return hp; }
@@ -45,9 +51,9 @@ public class EnemyBase : MonoBehaviour
 
     [SerializeField] Transform handPosition;
 
-    //https://yandex.ru/video/preview/14501694929795046945 на ragdoll
-    //https://ru.stackoverflow.com/questions/700172/%D0%9D%D0%B0%D0%B9%D1%82%D0%B8-%D0%B1%D0%BB%D0%B8%D0%B6%D0%BD%D0%B8%D0%B9-%D0%BE%D0%B1%D1%8A%D0%B5%D0%BA%D1%82-unity?ysclid=ltau7nueld728826623
-    //ближайшая часть экрана
+    // https://yandex.ru/video/preview/14501694929795046945 на ragdoll
+    // https://ru.stackoverflow.com/questions/700172/%D0%9D%D0%B0%D0%B9%D1%82%D0%B8-%D0%B1%D0%BB%D0%B8%D0%B6%D0%BD%D0%B8%D0%B9-%D0%BE%D0%B1%D1%8A%D0%B5%D0%BA%D1%82-unity?ysclid=ltau7nueld728826623
+    // ближайшая часть экрана
 
     private void Start()
     {
@@ -61,7 +67,6 @@ public class EnemyBase : MonoBehaviour
         xScale = Mathf.Abs(transform.localScale.x);
 
         hammerUse = GameObject.Find("HammerControll").GetComponent<HammerUse>();
-        
 
         if (startPosition < tower.position.x)
         {
@@ -72,21 +77,24 @@ public class EnemyBase : MonoBehaviour
         {
             facingRight = false;
             currentXScale = -xScale;
-        } 
+        }
         transform.localScale = new Vector3(currentXScale, transform.localScale.y, transform.localScale.z);
     }
 
+
     void FixedUpdate()
     {
-        if(canMove)  
+        if (canMove)
         {
             if (facingRight)
             {
                 transform.position = new Vector2(transform.position.x + speed * Time.deltaTime, transform.position.y);
+                damageText.transform.localRotation = Quaternion.Euler(0, 0, 0);
             }
             else
             {
                 transform.position = new Vector2(transform.position.x - speed * Time.deltaTime, transform.position.y);
+                damageText.transform.localRotation = Quaternion.Euler(0, 180, 0);
             }
         }
 
@@ -98,6 +106,7 @@ public class EnemyBase : MonoBehaviour
         marshrutka = FindObjectOfType<MarshrutkaMove>();
         svyatogor = FindObjectOfType<svyatogorDamage>();
         piano = FindObjectOfType<pianoLogicCard>();
+        mine = FindObjectOfType<MineWork>();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -112,9 +121,10 @@ public class EnemyBase : MonoBehaviour
 
         if (collision.gameObject.CompareTag("hammer"))
         {
-            //Destroy(collision.gameObject);
             TakeDamage();
-            //Debug.Log(hammerUse.finalDamage);
+            damageText.gameObject.SetActive(true);
+            damageText.text = hammerUse.finalDamage.ToString();
+            StartCoroutine(HideText(1f));
         }
 
         if (collision.gameObject.GetComponent<Brick>() && !carriesABrick)
@@ -126,24 +136,39 @@ public class EnemyBase : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Marshrutka"))
         {
-            //Destroy(collision.gameObject);
             TakeDamageMarshurtka();
-            //Debug.Log(marshrutka.finalMarshrutkaDamage);
+            damageText.gameObject.SetActive(true);
+            damageText.text = marshrutka.finalMarshrutkaDamage.ToString();
+            StartCoroutine(HideText(1f));
         }
-        //else if(collision.gameObject.GetComponent<Player>())
-        //{
-        //    carriesABrick = true;
-        //}
 
         if (collision.gameObject.CompareTag("Svyatogor"))
         {
             TakeDamageSvyatogor();
+            damageText.gameObject.SetActive(true);
+            damageText.text = svyatogor.svyatogorDamageFinale.ToString();
+            StartCoroutine(HideText(1f));
         }
 
         if (collision.gameObject.CompareTag("Piano"))
         {
-            TakeDamagePiano();  
+            TakeDamagePiano();
+            damageText.gameObject.SetActive(true);
+            damageText.text = piano.finalPianoDamage.ToString();
+            StartCoroutine(HideText(1f));
         }
+
+        if (collision.gameObject.CompareTag("Mines"))
+        {
+            int damage = collision.gameObject.GetComponent<MineWork>().finalDamage;
+            TakeDamageMines(damage);
+
+            damageText.gameObject.SetActive(true);
+            damageText.text = damage.ToString();
+
+            StartCoroutine(HideText(1f));
+        }
+
     }
 
     private void TakeABrick()
@@ -166,7 +191,7 @@ public class EnemyBase : MonoBehaviour
         canMove = false;
 
         yield return new WaitForSeconds(1);
-        
+
         carriesABrick = true;
         Flip();
         canMove = true;
@@ -205,7 +230,6 @@ public class EnemyBase : MonoBehaviour
             carriesABrick = false;
         }
         GetComponent<SkeletonAnimation>().AnimationName = "Idle";
-        //GetComponent<SkeletonRagdoll2D>().Apply();
 
         canMove = false;
 
@@ -233,6 +257,7 @@ public class EnemyBase : MonoBehaviour
         {
             facingRight = true;
             currentXScale = -xScale;
+
         }
         float newXscale = -transform.localScale.x;
         transform.localScale = new Vector3(newXscale, transform.localScale.y, transform.localScale.z);
@@ -295,6 +320,35 @@ public class EnemyBase : MonoBehaviour
         {
             isDead = true;
             StartCoroutine(Death());
+        }
+    }
+
+    public void TakeDamageMines(int damage)
+    {
+        HP -= damage;
+        damageText.text = damage.ToString();
+        if (damage > bigDamage)
+        {
+            StartCoroutine(Ragdoll());
+        }
+        if (HP <= 0)
+        {
+            isDead = true;
+            StartCoroutine(Death());
+        }
+    }
+
+
+    IEnumerator HideText(float time)
+    {
+        yield return new WaitForSeconds(time);
+        damageText.gameObject.SetActive(false);
+    }
+    public void TheVictoryMarch(bool leaderFacingRight)
+    {
+        if (leaderFacingRight != facingRight)
+        {
+            Flip();
         }
     }
 }

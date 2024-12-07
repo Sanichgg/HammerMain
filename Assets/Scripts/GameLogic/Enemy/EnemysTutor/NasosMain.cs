@@ -6,12 +6,12 @@ public class NasosMain : MonoBehaviour
 {
     public Transform topPosition;
     public Transform bottomPosition;
-    public float downSpeed = 2f;  // Скорость опускания
-    public float riseSpeed = 1f;  // Скорость подъема
+    public float downSpeed = 2f;//скорость опускания
+    public float riseSpeed = 1f;//скорость подъема
     public float requiredDamage = 15f;
 
     public int currentDamage = 0;
-    private bool isFixedInPlace = false;
+    public bool isFixedInPlace = false;
     private bool isGoingDown = false;
     private bool isGoingUp = false;
     private bool isForceDropping = false;

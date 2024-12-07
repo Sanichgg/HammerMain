@@ -123,11 +123,13 @@ public class TheaterLeft : MonoBehaviour
 
 
         Vector3 localScale = transform.localScale;
+        //Mathf.Sign заставляет персонажа смотреть в ту же сторону, к которой он шёл(отличие от основного в минусе)
         localScale.x = scaleX * Mathf.Sign(mainIndividaulParameters[waypointindex].waypoint.transform.position.x - transform.position.x);
         transform.localScale = localScale;
 
 
         Vector3 localScaleText = currentTextBox.transform.localScale;
+        //Mathf.Sign заставляет диалоговое окно смотреть в ту же сторону, к которой он шёл персонаж (отличие от основного в минусе)
         localScaleText.x = -localScaleText.x * Mathf.Sign(mainIndividaulParameters[waypointindex].waypoint.transform.position.x - transform.position.x);
         currentTextBox.transform.localScale = localScaleText;
         Debug.LogWarning("Flip");

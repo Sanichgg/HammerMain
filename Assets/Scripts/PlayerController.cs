@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
 
     public bool isSvyatogorCardChosen = false;
     public bool isPianoCardChosen = false;
+    public bool isRaketaCardChosen = false;
 
     public void OnSvyatogorCardChosen()
     {
@@ -18,5 +19,10 @@ public class PlayerController : MonoBehaviour
     public void OnPianoCardChosen()
     {
         isPianoCardChosen = true;
+    }
+
+    public void OnRaketaCardChosen()
+    {
+        isRaketaCardChosen=true;
     }
 }

@@ -57,6 +57,7 @@ public class HammerUse : MonoBehaviour
 
     public Vector3 initialPos;
     public int finalDamage;
+    public Collider2D spawnZoneCollider;
 
     void Start()
     {
@@ -66,23 +67,24 @@ public class HammerUse : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && hammerCount > 0 && reloadTimer <= 0 && useHammer ==  true)
+        if (Input.GetMouseButtonDown(0) && hammerCount > 0 && reloadTimer <= 0 && useHammer == true) 
         {
             //Instantiate hammer on mouse, get its rigidbody, controll only the current hammer
             Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             mousePosition.z = 0f;
-            currentObject = Instantiate(objectPrefab, mousePosition, Quaternion.identity);
-            currRb = currentObject.GetComponent<Rigidbody2D>();
-            mouseOffset = currentObject.transform.position - mousePosition;
-            isDragging = true;
+            if (spawnZoneCollider != null && spawnZoneCollider.OverlapPoint(mousePosition))
+            {
+                currentObject = Instantiate(objectPrefab, mousePosition, Quaternion.identity);
+                currRb = currentObject.GetComponent<Rigidbody2D>();
+                mouseOffset = currentObject.transform.position - mousePosition;
+                isDragging = true;
 
-            //Always check where the hammer will go if mouse up
-            //CalculateThrowVector();
+                initialPos = transform.position;
 
-            initialPos = transform.position;
+                hammerCount--;
+                allHammers++;
+            }
 
-            hammerCount--;
-            allHammers++;
         }
 
         if (reloadTimer > 0)
@@ -138,8 +140,8 @@ public class HammerUse : MonoBehaviour
             {
                 if (collider.gameObject.tag == "Enemy")
                 {
-                    throwDistance = Vector3.Distance(initialPos, transform.position);
-                    addDamage = Mathf.Lerp(0, maxAdditionalDamage, throwDistance / maxDistance);
+                    float normalizedDistance = Mathf.Clamp01(throwDistance / maxDistance);
+                    addDamage = Mathf.Sqrt(normalizedDistance) * maxAdditionalDamage;
                     damage = baseDamage + addDamage;
                     finalDamage = Mathf.RoundToInt(damage);
 

@@ -12,6 +12,7 @@ public class balloom : MonoBehaviour
             if (pianoLogic != null)
             {
                 pianoLogic.StopPiano();
+                Destroy(this.gameObject);
             }
         }
     }
