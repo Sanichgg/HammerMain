@@ -2,27 +2,27 @@ using Spine.Unity;
 using Spine.Unity.Examples;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
-using TMPro;
 
 public class EnemyBase : MonoBehaviour
 {
-    [Header("HP system Settings")]
-    private int hp = 30;
-    public int maxHP;
+    [Header("Ragdoll")]
+    //[SerializeField] GameObject ragdollBody;
+    //private ragdoll2dfix ragdollScript;
+    private MeshRenderer meshRenderer;
+    private SkeletonAnimation skeletonAnimation;
 
-    //public float damageEnemy;
-    public HammerUse hammerUse;
-    public MarshrutkaMove marshrutka;
-    public svyatogorDamage svyatogor;
-    public pianoLogicCard piano;
-    public MineWork mine;
+    [Header("HP system Settings")]
+    private float hp = 30;
+    public float maxHP;
 
     public TextMeshPro damageText;
 
-    public int HP
+    //public float damageEnemy;
+    public HammerUse hammerUse;
+    public float HP
     {
         get { return hp; }
         set { hp = Mathf.Clamp(value, 0, maxHP); }
@@ -42,7 +42,7 @@ public class EnemyBase : MonoBehaviour
 
     private bool isRagdoll;
     private bool isDead = false;
-    private int bigDamage = 13;
+    [SerializeField]  private int bigDamage = 13;
 
     private Rigidbody2D rb;
 
@@ -50,15 +50,21 @@ public class EnemyBase : MonoBehaviour
     private float currentXScale;
 
     [SerializeField] Transform handPosition;
+    public bool isLeader = false;
 
-    // https://yandex.ru/video/preview/14501694929795046945 на ragdoll
-    // https://ru.stackoverflow.com/questions/700172/%D0%9D%D0%B0%D0%B9%D1%82%D0%B8-%D0%B1%D0%BB%D0%B8%D0%B6%D0%BD%D0%B8%D0%B9-%D0%BE%D0%B1%D1%8A%D0%B5%D0%BA%D1%82-unity?ysclid=ltau7nueld728826623
-    // ближайшая часть экрана
+
+    public MarshrutkaMove marshrutka;
+    public svyatogorDamage svyatogor;
+    public pianoLogicCard piano;
+    public MineWork mine;
+
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        speed = FindObjectOfType<EnemyManager>().speed;
+        //ragdollScript = ragdollBody.GetComponent<ragdoll2dfix>();
+        meshRenderer = GetComponent<MeshRenderer>();
+        speed = FindObjectOfType<EnemyManagerForTestBuild>().speed;
 
         canMove = true;
         tower = FindObjectOfType<Tower>().gameObject.transform;
@@ -76,11 +82,10 @@ public class EnemyBase : MonoBehaviour
         else
         {
             facingRight = false;
-            currentXScale = -xScale;
-        }
+            currentXScale = -xScale;    
+        } 
         transform.localScale = new Vector3(currentXScale, transform.localScale.y, transform.localScale.z);
     }
-
 
     void FixedUpdate()
     {
@@ -191,7 +196,7 @@ public class EnemyBase : MonoBehaviour
         canMove = false;
 
         yield return new WaitForSeconds(1);
-
+        
         carriesABrick = true;
         Flip();
         canMove = true;
@@ -205,6 +210,14 @@ public class EnemyBase : MonoBehaviour
         {
             GetComponent<SkeletonAnimation>().loop = true;
             GetComponent<SkeletonAnimation>().AnimationName = "Walk2";
+        }
+
+        // if is final brick
+        if (currentBrick != null && currentBrick.isFinalHammer)
+        {
+            Debug.Log("7674648u763559y6480");
+            //FindObjectOfType<EnemyManager>().Final(facingRight);
+            FindObjectOfType<EnemyManagerForTestBuild>().Final(facingRight);
         }
     }
 
@@ -223,28 +236,72 @@ public class EnemyBase : MonoBehaviour
         Destroy(gameObject);
     }
 
+    private IEnumerator DeathTimer()
+    {
+        canMove = false;
+        //GetComponent<SkeletonRagdoll2D>().Apply();
+
+        if (carriesABrick)
+        {
+            carriesABrick = false;
+        }
+
+        yield return new WaitForSeconds(1);
+        Death();
+    }
+
     private IEnumerator Ragdoll()
     {
         if (carriesABrick)
         {
             carriesABrick = false;
         }
-        GetComponent<SkeletonAnimation>().AnimationName = "Idle";
 
+        //Debug.Log(skeletonAnimation != null);
         canMove = false;
 
+        GetComponent<SkeletonAnimation>().AnimationName = "GetUp3";
+        
+        //GetComponent<SkeletonAnimation>().timeScale = 0; //////////////////////////////////////
+
+        //skeletonAnimation.AnimationName = "GetUp";
+
+        //ActivateRagdoll();
+        
+        //GetComponent<SkeletonAnimation>().AnimationName = "Idle";
+        GetComponent<SkeletonRagdoll2D>().Apply();
+
+        
+
         yield return new WaitForSeconds(2);
+        Death();
 
-        if (!isDead)
-        {
-            canMove = true;
-            GetComponent<SkeletonRagdoll2D>().isActive = false;
+        //if (!isDead)
+        //{
+        //    canMove = true;
+        //    GetComponent<SkeletonRagdoll2D>().isActive = false;
 
-            GetComponent<SkeletonAnimation>().loop = true;
-            GetComponent<SkeletonAnimation>().ClearState();
-            GetComponent<SkeletonAnimation>().AnimationName = "Walk2";
-        }
+        //    //GetComponent<SkeletonAnimation>().timeScale = 1; ////////////////////////////////////////
+
+        //    GetComponent<SkeletonAnimation>().loop = true;
+        //    GetComponent<SkeletonAnimation>().ClearState();
+        //    GetComponent<SkeletonAnimation>().AnimationName = "Walk2";
+        //}
     }
+
+    //private void ActivateRagdoll()
+    //{
+    //    meshRenderer.enabled = false;
+    //    ragdollBody.SetActive(true);
+
+    //    ragdollScript.EnableRagdoll();
+    //}
+    //private void DeactivateRagdoll()
+    //{
+    //    meshRenderer.enabled = true;
+    //    ragdollBody.SetActive(false);
+    //    ragdollScript.DisableRagdoll();
+    //}
 
     private void Flip()
     {
@@ -257,7 +314,6 @@ public class EnemyBase : MonoBehaviour
         {
             facingRight = true;
             currentXScale = -xScale;
-
         }
         float newXscale = -transform.localScale.x;
         transform.localScale = new Vector3(newXscale, transform.localScale.y, transform.localScale.z);
@@ -337,13 +393,12 @@ public class EnemyBase : MonoBehaviour
             StartCoroutine(Death());
         }
     }
-
-
     IEnumerator HideText(float time)
     {
         yield return new WaitForSeconds(time);
         damageText.gameObject.SetActive(false);
     }
+
     public void TheVictoryMarch(bool leaderFacingRight)
     {
         if (leaderFacingRight != facingRight)

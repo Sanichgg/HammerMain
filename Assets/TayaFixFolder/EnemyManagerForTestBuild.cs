@@ -56,6 +56,7 @@ public class EnemyManagerForTestBuild : MonoBehaviour
 
     public void Final(bool facingRight)
     {
+        Debug.Log("wfwerwerqerewrqwerqwerewdwedqwdsw");
         PlayerAnimationController playerAnimationController = FindObjectOfType<PlayerAnimationController>();
         playerAnimationController.LoseHammerAnimation();
         if (facingRight) playerAnimationController.transform.localScale = -playerAnimationController.transform.localScale;
