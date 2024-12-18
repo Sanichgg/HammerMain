@@ -11,8 +11,10 @@ public class RaketaSpawn : MonoBehaviour
     private bool hasActivated = false;
     public PlayerController playerController;
 
-    public Transform[] spawnPoints;
-    public float maxRotationAngle = 30f; 
+    public Transform spawnPoint; 
+    public float screenXMin = -10f; 
+    public float screenXMax = 10f;  
+    public float raketaSpeed = 5f;
 
     // Start is called before the first frame update
     void Start()
@@ -40,7 +42,7 @@ public class RaketaSpawn : MonoBehaviour
             timeSinceLastSecond -= 1f; // уменьшаем на 1 секунду
             if (ShouldActivate())
             {
-                AttackEnemy();
+                SpawnRaketa();
             }
         }
     }
@@ -56,61 +58,37 @@ public class RaketaSpawn : MonoBehaviour
         return randomValue <= activationChance;
     }
 
-    public void AttackEnemy()
+    public void SpawnRaketa()
     {
         if (hasActivated) return;
 
-        if (spawnPoints.Length > 0)
+        if (spawnPoint != null)
         {
-            Transform randomSpawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
-            Vector3 spawnPosition = randomSpawnPoint.position;
+            float randomX = Random.Range(screenXMin, screenXMax);
+            Vector3 spawnPosition = new Vector3(randomX, spawnPoint.position.y, spawnPoint.position.z);
+            GameObject spawnedSprite = Instantiate(raketaSprite, spawnPosition, Quaternion.identity);
 
-            GameObject spawnedSprite = Instantiate(raketaSprite, spawnPosition, Quaternion.Euler(0f, 0f, -180f)); 
-            GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-            GameObject closestEnemy = null;
-            float closestDistance = Mathf.Infinity;
-
-            foreach (GameObject enemy in enemies)
+            float rotationAngle;
+            if (randomX < 0) 
             {
-                float distance = Vector3.Distance(spawnPosition, enemy.transform.position);
-                if (distance < closestDistance)
-                {
-                    closestDistance = distance;
-                    closestEnemy = enemy;
-                }
+                rotationAngle = Random.Range(-170f, -120f);
             }
-            if (closestEnemy != null)
+            else 
             {
-                Vector3 direction = closestEnemy.transform.position - spawnPosition;
-                float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-                float deltaAngle = Mathf.Clamp(angle - (-180f), -maxRotationAngle, maxRotationAngle);
-                float finalAngle = -180f + deltaAngle; // -180 градусов
-
-                spawnedSprite.transform.rotation = Quaternion.Euler(0f, 0f, finalAngle);
+                rotationAngle = Random.Range(-190f, -240f);
             }
+            RaketaWork movementScript = spawnedSprite.AddComponent<RaketaWork>();
+            movementScript.raketaSpawn = this;
+            movementScript.Initialize(rotationAngle, raketaSpeed);
 
-            StartCoroutine(DestroySpriteAfterDelay(spawnedSprite, 2f));
             hasActivated = true;
         }
     }
 
-    private IEnumerator DestroySpriteAfterDelay(GameObject sprite, float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        Destroy(sprite);
-        ResetTimer(); // сбрасываю таймер после уничтожения спрайта
-    }
-
-    private void ResetTimer()
+    public void ResetTimer()
     {
         secondsCounter = 0;
         timeSinceLastSecond = 0f;
-        hasActivated = false; // сбрасываю флаг активации только после уничтожения спрайта
-    }
-
-    private bool IsVisible(Transform enemyTransform)
-    {
-        Vector3 screenPoint = Camera.main.WorldToViewportPoint(enemyTransform.position);
-        return screenPoint.x >= 0 && screenPoint.x <= 1 && screenPoint.y >= 0 && screenPoint.y <= 1;
+        hasActivated = false;
     }
 }

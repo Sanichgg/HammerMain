@@ -11,13 +11,14 @@ public class EnemyBase : MonoBehaviour
     [Header("Ragdoll")]
     //[SerializeField] GameObject ragdollBody;
     //private ragdoll2dfix ragdollScript;
+    public EnemyDamage enemyDamage;
+
     private MeshRenderer meshRenderer;
     private SkeletonAnimation skeletonAnimation;
 
     [Header("HP system Settings")]
     private float hp = 30;
     public float maxHP;
-
     public TextMeshPro damageText;
 
     //public float damageEnemy;
@@ -52,15 +53,17 @@ public class EnemyBase : MonoBehaviour
     [SerializeField] Transform handPosition;
     public bool isLeader = false;
 
-
+    /*
     public MarshrutkaMove marshrutka;
     public svyatogorDamage svyatogor;
     public pianoLogicCard piano;
-    public MineWork mine;
+    */
+    
 
 
     private void Start()
     {
+        enemyDamage = GetComponent<EnemyDamage>();
         rb = GetComponent<Rigidbody2D>();
         //ragdollScript = ragdollBody.GetComponent<ragdoll2dfix>();
         meshRenderer = GetComponent<MeshRenderer>();
@@ -72,7 +75,7 @@ public class EnemyBase : MonoBehaviour
 
         xScale = Mathf.Abs(transform.localScale.x);
 
-        hammerUse = GameObject.Find("HammerControll").GetComponent<HammerUse>();
+        hammerUse = GameObject.FindObjectOfType<HammerUse>(); 
 
         if (startPosition < tower.position.x)
         {
@@ -89,10 +92,11 @@ public class EnemyBase : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (canMove)
+        if(canMove)  
         {
             if (facingRight)
             {
+                
                 transform.position = new Vector2(transform.position.x + speed * Time.deltaTime, transform.position.y);
                 damageText.transform.localRotation = Quaternion.Euler(0, 0, 0);
             }
@@ -107,11 +111,10 @@ public class EnemyBase : MonoBehaviour
         {
             Destroy(gameObject);
         }
-
+        /*
         marshrutka = FindObjectOfType<MarshrutkaMove>();
         svyatogor = FindObjectOfType<svyatogorDamage>();
-        piano = FindObjectOfType<pianoLogicCard>();
-        mine = FindObjectOfType<MineWork>();
+        piano = FindObjectOfType<pianoLogicCard>();*/
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -123,57 +126,45 @@ public class EnemyBase : MonoBehaviour
         //        //TakeABrick();
         //    }
         //}
-
+        /*
         if (collision.gameObject.CompareTag("hammer"))
         {
+            Destroy(collision.gameObject);
             TakeDamage();
-            damageText.gameObject.SetActive(true);
-            damageText.text = hammerUse.finalDamage.ToString();
-            StartCoroutine(HideText(1f));
+            Debug.Log(hammerUse.damage);
         }
-
+        */
         if (collision.gameObject.GetComponent<Brick>() && !carriesABrick)
         {
             carriesABrick = true;
             currentBrick = collision.gameObject.GetComponent<Brick>();
             TakeABrick();
         }
-
+        //else if(collision.gameObject.GetComponent<Player>())
+        //{
+        //    carriesABrick = true;
+        //}
+        /*
         if (collision.gameObject.CompareTag("Marshrutka"))
         {
-            TakeDamageMarshurtka();
-            damageText.gameObject.SetActive(true);
-            damageText.text = marshrutka.finalMarshrutkaDamage.ToString();
-            StartCoroutine(HideText(1f));
+            //Destroy(collision.gameObject);
+            StartCoroutine(Ragdoll());
+            //Debug.Log(marshrutka.finalMarshrutkaDamage);
         }
+        //else if(collision.gameObject.GetComponent<Player>())
+        //{
+        //    carriesABrick = true;
+        //}
 
         if (collision.gameObject.CompareTag("Svyatogor"))
         {
-            TakeDamageSvyatogor();
-            damageText.gameObject.SetActive(true);
-            damageText.text = svyatogor.svyatogorDamageFinale.ToString();
-            StartCoroutine(HideText(1f));
+            StartCoroutine(Ragdoll());
         }
 
         if (collision.gameObject.CompareTag("Piano"))
         {
-            TakeDamagePiano();
-            damageText.gameObject.SetActive(true);
-            damageText.text = piano.finalPianoDamage.ToString();
-            StartCoroutine(HideText(1f));
-        }
-
-        if (collision.gameObject.CompareTag("Mines"))
-        {
-            int damage = collision.gameObject.GetComponent<MineWork>().finalDamage;
-            TakeDamageMines(damage);
-
-            damageText.gameObject.SetActive(true);
-            damageText.text = damage.ToString();
-
-            StartCoroutine(HideText(1f));
-        }
-
+            StartCoroutine(Ragdoll());
+        }*/
     }
 
     private void TakeABrick()
@@ -215,24 +206,13 @@ public class EnemyBase : MonoBehaviour
         // if is final brick
         if (currentBrick != null && currentBrick.isFinalHammer)
         {
-            Debug.Log("7674648u763559y6480");
             //FindObjectOfType<EnemyManager>().Final(facingRight);
             FindObjectOfType<EnemyManagerForTestBuild>().Final(facingRight);
         }
     }
 
-    private IEnumerator Death()
+    private void Death()
     {
-        canMove = false;
-
-        GetComponent<SkeletonRagdoll2D>().Apply();
-
-        if (carriesABrick)
-        {
-            carriesABrick = false;
-        }
-
-        yield return new WaitForSeconds(1);
         Destroy(gameObject);
     }
 
@@ -252,6 +232,7 @@ public class EnemyBase : MonoBehaviour
 
     private IEnumerator Ragdoll()
     {
+        
         if (carriesABrick)
         {
             carriesABrick = false;
@@ -321,8 +302,8 @@ public class EnemyBase : MonoBehaviour
 
     public void TakeDamage()
     {
-        HP += -hammerUse.finalDamage;
-        if (hammerUse.finalDamage > bigDamage)
+        HP += -enemyDamage.hammerUse.finalDamage;
+        if (/*hammerUse.damage > bigDamage*/ HP>=0)
         {
             StartCoroutine(Ragdoll());
         }
@@ -330,14 +311,15 @@ public class EnemyBase : MonoBehaviour
         if (HP <= 0)
         {
             isDead = true;
-            StartCoroutine(Death());
+            //StartCoroutine(Death());
         }
     }
 
+
     public void TakeDamageMarshurtka()
     {
-        HP += -marshrutka.finalMarshrutkaDamage;
-        if (marshrutka.marshrutkaDamage > bigDamage)
+        HP += -enemyDamage.marshrutka.finalMarshrutkaDamage;
+        if (/*enemyDamage.marshrutka.marshrutkaDamage*/ HP >= 0)
         {
             StartCoroutine(Ragdoll());
         }
@@ -345,14 +327,14 @@ public class EnemyBase : MonoBehaviour
         if (HP <= 0)
         {
             isDead = true;
-            StartCoroutine(Death());
+            //StartCoroutine(Death());
         }
     }
 
     public void TakeDamageSvyatogor()
     {
-        HP += -svyatogor.svyatogorDamageFinale;
-        if (svyatogor.svyatogorDamageFinale > bigDamage)
+        HP += -enemyDamage.svyatogor.svyatogorDamageFinale;
+        if (/*enemyDamage.svyatogor.svyatogorDamageFinale*/ HP >= 0)
         {
             StartCoroutine(Ragdoll());
         }
@@ -360,14 +342,14 @@ public class EnemyBase : MonoBehaviour
         if (HP <= 0)
         {
             isDead = true;
-            StartCoroutine(Death());
+            //StartCoroutine(Death());
         }
     }
 
     public void TakeDamagePiano()
     {
-        HP += -piano.finalPianoDamage;
-        if (piano.finalPianoDamage > bigDamage)
+        HP += -enemyDamage.piano.finalPianoDamage;
+        if (/*enemyDamage.piano.finalPianoDamage*/HP >= 0)
         {
             StartCoroutine(Ragdoll());
         }
@@ -375,7 +357,7 @@ public class EnemyBase : MonoBehaviour
         if (HP <= 0)
         {
             isDead = true;
-            StartCoroutine(Death());
+            //StartCoroutine(Death());
         }
     }
 
@@ -390,19 +372,30 @@ public class EnemyBase : MonoBehaviour
         if (HP <= 0)
         {
             isDead = true;
-            StartCoroutine(Death());
+            //StartCoroutine(Death());
         }
     }
-    IEnumerator HideText(float time)
-    {
-        yield return new WaitForSeconds(time);
-        damageText.gameObject.SetActive(false);
-    }
 
+    public void TakeDamageRaketa(int damage)
+    {
+        HP -= damage;
+        damageText.text = damage.ToString();
+        if (damage > bigDamage)
+        {
+            StartCoroutine(Ragdoll());
+        }
+        if (HP <= 0)
+        {
+            isDead = true;
+            //StartCoroutine(Death());
+        }
+    }
     public void TheVictoryMarch(bool leaderFacingRight)
     {
+        Debug.Log("Victory at All Cost1");
         if (leaderFacingRight != facingRight)
         {
+            Debug.Log("Victory at All Cost2");
             Flip();
         }
     }

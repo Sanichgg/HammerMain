@@ -425,7 +425,7 @@ PrefabInstance:
     - target: {fileID: 5833363454635171797, guid: 3d3d002f5861acf4aa5bd297a3e88f06, type: 3}
       propertyPath: cardPool.Array.data[1]
       value: 
-      objectReference: {fileID: 4022482068537172569, guid: 39171ff7304f292418b399fbac1e0044, type: 3}
+      objectReference: {fileID: 4022482068537172569, guid: 01d0c681e8c475f48a518f2fc424e971, type: 3}
     - target: {fileID: 5833363454635171797, guid: 3d3d002f5861acf4aa5bd297a3e88f06, type: 3}
       propertyPath: cardPool.Array.data[2]
       value: 
@@ -1363,6 +1363,37 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LayerNumber: 1
+--- !u!1 &333349251
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 333349252}
+  m_Layer: 0
+  m_Name: RaketaSpawn
+  m_TagString: Untagged
+  m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &333349252
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 333349251}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 5, z: 6.392628}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &455688370
 GameObject:
   m_ObjectHideFlags: 0
@@ -1716,12 +1747,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   raketaSprite: {fileID: 8003388844220160269, guid: 53f28464a9858b04391604c24286e5cb, type: 3}
   playerController: {fileID: 523945711}
-  spawnPoints:
-  - {fileID: 664440685}
-  - {fileID: 637476310}
-  - {fileID: 1002703013}
-  - {fileID: 1521819544}
-  maxRotationAngle: 30
+  spawnPoint: {fileID: 333349252}
+  screenXMin: -10
+  screenXMax: 10
+  raketaSpeed: 5
 --- !u!1 &529948512
 GameObject:
   m_ObjectHideFlags: 0
@@ -4269,7 +4298,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad95e6c24c5fc554195acc3ebea700c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeToSpawn: 0.3
+  timeToSpawn: 0.7
   spawnPonts:
   - {fileID: 455688371}
   - {fileID: 1906154024}
@@ -5515,7 +5544,7 @@ MonoBehaviour:
   reloadTime: 5
   reloadTimer: 0
   allHammers: 0
-  uIHammer: {fileID: 1434542687}
+  uIHammer: {fileID: 0}
   baseDamage: 5
   maxAdditionalDamage: 15
   maxDistance: 30
@@ -6607,3 +6636,4 @@ SceneRoots:
   - {fileID: 523945710}
   - {fileID: 1711101859}
   - {fileID: 1767048550}
+  - {fileID: 333349252}

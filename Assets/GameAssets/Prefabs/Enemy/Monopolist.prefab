@@ -47,6 +47,7 @@ GameObject:
   - component: {fileID: 1834881960556884511}
   - component: {fileID: 1834881960556884507}
   - component: {fileID: 1834881960556884504}
+  - component: {fileID: 6881299071222604854}
   - component: {fileID: 1834881960556884508}
   - component: {fileID: 1779084480655117349}
   m_Layer: 8
@@ -85,16 +86,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd4fea778e456564cbf6ba183a7954f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyDamage: {fileID: 0}
   maxHP: 20
-  hammerUse: {fileID: 0}
-  marshrutka: {fileID: 0}
-  svyatogor: {fileID: 0}
-  piano: {fileID: 0}
-  mine: {fileID: 0}
   damageText: {fileID: 4299807777549764813}
+  hammerUse: {fileID: 0}
   tower: {fileID: 0}
   speed: 1
+  bigDamage: 13
   handPosition: {fileID: 2848193104716717681}
+  isLeader: 0
 --- !u!33 &1834881960556884499
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -328,6 +328,25 @@ PolygonCollider2D:
       - {x: 213.55226, y: 42.83304}
       - {x: 126.31299, y: 389.25708}
   m_UseDelaunayMesh: 0
+--- !u!114 &6881299071222604854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1834881960556884496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0905db4faf2368a4bb1f76b83c083f11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hammerUse: {fileID: 0}
+  marshrutka: {fileID: 0}
+  svyatogor: {fileID: 0}
+  piano: {fileID: 0}
+  mine: {fileID: 0}
+  raketa: {fileID: 0}
+  enemyBase: {fileID: 0}
 --- !u!114 &1834881960556884508
 MonoBehaviour:
   m_ObjectHideFlags: 0

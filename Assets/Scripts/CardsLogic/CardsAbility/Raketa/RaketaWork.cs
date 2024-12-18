@@ -1,64 +1,58 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
 
-public class MineWork : MonoBehaviour
+public class RaketaWork : MonoBehaviour
 {
-    private GameObject targetLine;
-    private bool targetLineSet = false;
-    public GameObject boomPrefab;
+    private float speed;
     public GameObject explosionRadius;
-    public float maxDamage = 25f;
-    public float minDamage = 5f;
+    public float maxDamage = 40f;
+    public float minDamage = 15f;
     public int finalDamage;
     private Rigidbody2D rb;
-    public float hammerPushForce = 2f;
-
-    
-
+    public GameObject boomPrefab;
     private bool hasExploded = false;
+    private bool isMoving = true;
+
+    public RaketaSpawn raketaSpawn;
 
     private void Awake()
     {
-        
         rb = GetComponent<Rigidbody2D>();
+        explosionRadius = transform.Find("Radius").gameObject;
+        boomPrefab = transform.Find("boom").gameObject;
         if (explosionRadius != null)
         {
             explosionRadius.SetActive(false);
         }
+        if (explosionRadius == null)
+        {
+            Debug.LogError("радиус не присвоен в инспекторе!");
+        }
+    }
+    public void Initialize(float angle, float moveSpeed)
+    {
+        speed = moveSpeed;
+        transform.rotation = Quaternion.Euler(0f, 0f, angle); 
     }
 
-    public void SetTargetLine(GameObject line)
+
+    void Update()
     {
-        targetLine = line;
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject == targetLine)
+        if (isMoving)
         {
-            targetLineSet = true;
-
-            rb.velocity = Vector2.zero;
-            rb.isKinematic = true;
-
-            Vector3 newPosition = transform.position;
-            newPosition.y = targetLine.transform.position.y;
-            transform.position = newPosition;
+            transform.position += transform.up * speed * Time.deltaTime;
         }
-        else
-        {
-            Physics2D.IgnoreCollision(GetComponent<Collider2D>(), collision.collider);
-        }
+        
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("hammer") && targetLineSet)
+        if (collision.CompareTag("hammer"))
         {
-            rb.isKinematic = false;
-            rb.constraints = RigidbodyConstraints2D.FreezeRotation | RigidbodyConstraints2D.FreezePositionY;
+            StopRaketa();
+            Boom();
+            StartCoroutine(DestroyRaketaAfterDelay(gameObject));
         }
 
         if (collision.CompareTag("Enemy") && !hasExploded)
@@ -67,37 +61,18 @@ public class MineWork : MonoBehaviour
             {
                 explosionRadius.SetActive(true);
             }
-
+            StopRaketa();
             ApplyExplosionEffects();
             Boom();
             hasExploded = true;
-            StartCoroutine(DestroyMineAfterDelay(gameObject));
+            StartCoroutine(DestroyRaketaAfterDelay(gameObject));
         }
-    }
 
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.CompareTag("hammer") && targetLineSet)
+        if (collision.CompareTag("Floor"))
         {
-            rb.isKinematic = true;
-            rb.constraints = RigidbodyConstraints2D.FreezeAll;
-        }
-    }
-
-    public void OnTriggerStay2D(Collider2D collision)
-    {
-        if (!targetLineSet || hasExploded) return;
-
-        if (collision.CompareTag("Mines"))
-        {
+            StopRaketa();
             Boom();
-            StartCoroutine(DestroyMineAfterDelay(gameObject));
-        }
-
-        if (collision.CompareTag("hammer"))
-        {
-            float horizontalInput = collision.gameObject.transform.position.x - transform.position.x;
-            rb.velocity = new Vector2(horizontalInput * hammerPushForce, rb.velocity.y);
+            StartCoroutine(DestroyRaketaAfterDelay(gameObject));
         }
     }
 
@@ -108,10 +83,10 @@ public class MineWork : MonoBehaviour
 
     private void ApplyExplosionEffects()
     {
-        float radius = explosionRadius.GetComponent<Collider2D>().bounds.size.x / 2;
+        float radius = explosionRadius.GetComponent<Collider2D>().bounds.size.x;
         Collider2D[] objectsInRange = Physics2D.OverlapCircleAll(transform.position, radius);
         foreach (Collider2D obj in objectsInRange)
-        
+
             if (obj.CompareTag("Enemy"))
             {
                 float distance = Vector2.Distance(transform.position, obj.transform.position);
@@ -121,7 +96,7 @@ public class MineWork : MonoBehaviour
                 EnemyBase enemy = obj.GetComponent<EnemyBase>();
                 if (enemy != null)
                 {
-                    enemy.TakeDamageMines(finalDamage);
+                    enemy.TakeDamageRaketa(finalDamage);
                 }
                 /*бум бум тута
              Rigidbody2D objRb = obj.GetComponent<Rigidbody2D>();
@@ -131,12 +106,16 @@ public class MineWork : MonoBehaviour
                  objRb.AddForce(explosionDirection * explosionForce, ForceMode2D.Impulse);
              }
              */
+
             }
-        
+
+
+
     }
 
     public float CalculateDamage(float distance, float radius)
     {
+        Debug.Log($"Расстояние: {distance}, Радиус: {radius}");
         if (distance <= radius)
         {
             float damage = maxDamage * (1 - (distance / radius));
@@ -146,9 +125,24 @@ public class MineWork : MonoBehaviour
         return 0;
     }
 
-    private IEnumerator DestroyMineAfterDelay(GameObject mine)
+    private IEnumerator DestroyRaketaAfterDelay(GameObject raketa)
     {
         yield return new WaitForSeconds(0.5f);
-        Destroy(mine);
+
+        if (raketaSpawn != null)
+        {
+            raketaSpawn.ResetTimer();
+        }
+        Destroy(raketa);
     }
+
+    void StopRaketa()
+    {
+        isMoving = false;  
+        rb.velocity = Vector2.zero;  
+    }
+
+   
+
+    
 }
