@@ -56,7 +56,7 @@ public class EnemyManagerForTestBuild : MonoBehaviour
 
     public void Final(bool facingRight)
     {
-        Debug.Log("wfwerwerqerewrqwerqwerewdwedqwdsw");
+        Debug.Log("wfwerwerqerewrqwerqwerewdwedqwdswPizda");
         PlayerAnimationController playerAnimationController = FindObjectOfType<PlayerAnimationController>();
         playerAnimationController.LoseHammerAnimation();
         if (facingRight) playerAnimationController.transform.localScale = -playerAnimationController.transform.localScale;
@@ -67,7 +67,6 @@ public class EnemyManagerForTestBuild : MonoBehaviour
         foreach (EnemyBase enemy in FindObjectsOfType<EnemyBase>())
         {
             enemy.TheVictoryMarch(facingRight);
-            
         }
         
         StartCoroutine(FinalTimer());
